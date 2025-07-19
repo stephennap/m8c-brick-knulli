@@ -66,7 +66,7 @@ SELECT + Y  - Close application
 
 ## 🎵 Demo Video
 
-[![Synthwave - M8 Headless Tracker](https://img.youtube.com/vi/zaukeZiJM68/maxresdefault.jpg)](https://www.youtube.com/watch?v=zaukeZiJM68 "Synthwave - M8 Headless Tracker")
+[![Last Boss - Synthwave & Chiptune inspired M8 Headless Track](https://img.youtube.com/vi/CQViXEN8nNE/maxresdefault.jpg)](https://www.youtube.com/watch?v=CQViXEN8nNE "Last Boss - Synthwave & Chiptune inspired M8 Headless Track")
 
 ---
 
