@@ -75,14 +75,17 @@ Remap these in `m8c/m8c/config.ini` under `[gamepad]`. Note that m8c **rewrites 
 
 Every launch writes a full log to **`roms/ports/m8c/log.txt`**, including the resolved paths, the running kernel and whether the module loaded. Read that first.
 
+If the `m8c/` folder is missing entirely, the log can't go there — the script falls back to **`m8c-launch-error.log`** next to `m8c.sh`.
+
 | Symptom | Likely cause |
 | --- | --- |
-| `FATAL: m8c-bin not found` | Only `m8c.sh` was copied, or `m8c/` landed at the wrong level — compare against the tree above. |
-| `WARNING: could not load cdc-acm` | The bundled module is built for kernel **4.9.191**. Check `uname -r`; a different kernel needs a module rebuilt against it. |
+| `FATAL: game dir not found` | Only `m8c.sh` was copied. The `m8c/` folder has to sit beside it — compare against the tree above. |
+| `FATAL: m8c-bin not found` | `m8c/` is there but empty, or nested one level too deep. |
+| `WARNING: cdc-acm.ko was built for kernel X but this device runs Y` | The bundled module only loads on the kernel it was compiled against. It needs rebuilding for yours. |
+| `WARNING: missing shared libraries` | The image lacks a library m8c needs — usually `libserialport.so.0`. Install it, or copy one in and set `LD_LIBRARY_PATH`. |
 | `ttyACM devices now: none` | M8 not detected — confirm it's in **headless** mode, plugged into the USB-C data port, and connected before launch. |
 | `bad interpreter: /bin/bash^M` | `m8c.sh` picked up Windows CRLF line endings. Re-copy it, or run `dos2unix m8c.sh` on the device. |
-| `FATAL: cannot cd to ...` | The `m8c/` folder is missing next to `m8c.sh`. |
-| Launcher exits instantly, no new `log.txt` | `m8c.sh` isn't executable, so it never ran — see [Make Files Executable](#make-files-executable). |
+| Nothing happens, no log written anywhere | `m8c.sh` isn't executable, so it never ran — see [Make Files Executable](#make-files-executable). |
 
 ---
 
@@ -93,7 +96,10 @@ The launcher was rewritten to be portable ([details](https://github.com/f32-0/m8
 - **Self-locating** — finds its own folder via `readlink -f` instead of relying on PortMaster's `$directory` variable, so it works wherever the port is installed.
 - **Kernel-version agnostic** — uses `uname -r` rather than a hardcoded `/lib/modules/4.9.191`, with an `insmod` fallback.
 - **Re-launch safe** — skips loading the module when the device or `cdc_acm` is already present, instead of spamming modprobe errors.
-- **Diagnosable** — fails with a clear message when files are missing, and logs the environment to `log.txt`.
+- **Diagnosable** — fails with a clear message when files are missing, and logs the environment to `log.txt`. Logging starts before any validation, so a missing `m8c/` folder still produces a log rather than silence.
+- **Preflight checks** — compares the module's `vermagic` against the running kernel and reports missing shared libraries, instead of letting either fail cryptically.
+- **Console-safe** — restores the TTY from an `EXIT`/`INT`/`TERM` trap, so quitting or being killed by the frontend doesn't leave a garbled screen.
+- **Correct privileges** — module loading uses `$ESUDO` like the rest of the script, rather than assuming root.
 
 Binaries are byte-identical to the upstream v0.1 release:
 
