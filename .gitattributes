@@ -5,3 +5,6 @@
 # Release payload is binary; never touch line endings or try to diff it.
 *.ko binary
 m8c-bin binary
+
+# config.ini is parsed on the handheld; keep it LF for the same reason.
+*.ini text eol=lf

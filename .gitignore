@@ -1,0 +1,5 @@
+# Written by m8c.sh on every launch, on the device.
+m8c/log.txt
+
+# m8c writes these back beside config.ini at runtime.
+m8c/m8c/gamecontrollerdb.txt
