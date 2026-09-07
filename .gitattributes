@@ -1,0 +1,4 @@
+# Shell scripts must keep LF endings: this repo's scripts run on the
+# handheld's Linux, where a CRLF shebang fails as "bad interpreter".
+*.sh text eol=lf
+
