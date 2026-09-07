@@ -1,0 +1,7 @@
+# Shell scripts must keep LF endings: this repo's scripts run on the
+# handheld's Linux, where a CRLF shebang fails as "bad interpreter".
+*.sh text eol=lf
+
+# Release payload is binary; never touch line endings or try to diff it.
+*.ko binary
+m8c-bin binary
